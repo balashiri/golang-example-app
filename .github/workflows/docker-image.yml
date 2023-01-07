@@ -16,3 +16,44 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+name: 'Container Scan'
+description: 'Check for vulnerabilities in your container image'
+author: 'Bala'
+branding:
+  icon: 'shield'
+  color: 'green'
+
+inputs:
+  trivy_version:
+    description: 'Trivy CLI version (eg. v0.20.0)'
+    default: 'latest'
+    required: false
+  image:
+    description: 'Container image to scan (eg. alpine:3.7)'
+    required: false
+  tarball:
+    description: 'Container image tarball path to scan'
+    required: false
+  dockerfile:
+    description: 'Dockerfile required to generate a sarif report'
+    required: false
+  severity:
+    description: 'Report vulnerabilities of provided level or higher (default: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)'
+    required: false
+  severity_threshold:
+    description: 'Defines threshold for severity'
+    required: false
+ 
+
+outputs:
+  json:
+    description: 'JSON format scan result'
+  sarif:
+    description: 'SARIF format scan result'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+  post: 'dist/index.js'
+      
