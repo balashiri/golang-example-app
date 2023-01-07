@@ -16,35 +16,25 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+jobs:
+  trivy-scanning-job:
+    name: trivy-sec-scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'HIGH,CRITICAL'
 
-inputs:
-  trivy_version:
-    description: 'Trivy CLI version (eg. v0.20.0)'
-    default: 'latest'
-    required: false
-  image:
-    description: 'Container image to scan (eg. alpine:3.7)'
-    required: false
-  dockerfile:
-    description: 'Dockerfile required to generate a sarif report'
-    required: false
-  severity:
-    description: 'Report vulnerabilities of provided level or higher (default: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)'
-    required: false
-  severity_threshold:
-    description: 'Defines threshold for severity'
-    required: false
- 
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
 
-outputs:
-  json:
-    description: 'JSON format scan result'
-  sarif:
-    description: 'SARIF format scan result'
-
-runs:
-  using: 'node16'
-  main: 'dist/index.js'
-  post: 'dist/index.js'
-      
