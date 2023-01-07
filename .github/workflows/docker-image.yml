@@ -17,12 +17,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
-name: 'Container Scan'
-description: 'Check for vulnerabilities in your container image'
-author: 'Bala'
-branding:
-  icon: 'shield'
-  color: 'green'
 
 inputs:
   trivy_version:
@@ -31,9 +25,6 @@ inputs:
     required: false
   image:
     description: 'Container image to scan (eg. alpine:3.7)'
-    required: false
-  tarball:
-    description: 'Container image tarball path to scan'
     required: false
   dockerfile:
     description: 'Dockerfile required to generate a sarif report'
