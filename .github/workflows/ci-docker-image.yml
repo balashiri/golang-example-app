@@ -25,3 +25,14 @@ jobs:
       with:
         # Path to SARIF file relative to the root of the repository
         sarif_file: results.sarif
+
+    - name: Run static analysis
+      uses: aquasecurity/trivy-action@master
+      with:
+          scan-type: 'fs'
+          security-checks: 'vuln,secret,config'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL'
+
