@@ -39,7 +39,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
           push: true
-          tags: |
+          tags:
             ${{ env.GITHUB_REGISTRY }}/${{ env.GITHUB_REPOSITORY }}:${{ env.DOCKER_IMAGE_TAG }}
             
     - name: Run Trivy vulnerability scanner
